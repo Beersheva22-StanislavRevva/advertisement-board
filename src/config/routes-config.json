@@ -1,0 +1,7 @@
+{
+    "always": [{"to": "/", "label": "All Advertisements", "order":1},
+               {"to": "/category", "label": "Search by Category", "order":2},
+               {"to": "/price", "label": "Search by Price", "order":3},
+               {"to": "/add", "label": "Add New Advertisment", "order":4}]
+    
+}
