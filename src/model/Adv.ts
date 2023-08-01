@@ -1,11 +1,9 @@
 type Adv  = {
     id?: any,
-    age?: number,
-    birthDate: Date,
     name: string,
-    department: string,
-    salary: number,
-    gender: 'male' | 'female'
+    category: string,
+    price: number,
+    catFields: string
 
 }
 export default Adv;
