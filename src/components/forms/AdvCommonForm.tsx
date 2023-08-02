@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import { FormControl, Grid, TextField, InputLabel, Select, Box, MenuItem, Button, FormLabel, RadioGroup, FormControlLabel, Radio, FormHelperText, Snackbar, Alert } from '@mui/material';
 import Adv from "../../model/Adv";
 import advConfig from "../../config/adv-config.json"
 import InputResult from "../../model/InputResult";
 import { StatusType } from "../../model/StatusType";
+import { AdvEstateForm } from "./AdvEstateForm";
 type Props = {
     submitFn: (adv: Adv) => Promise<InputResult>,
     advUpdated?: Adv
@@ -13,11 +14,12 @@ const initialAdv: Adv = {
     id: 0, name: '',category: '', price: 0, catFields:''
 };
 export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
-    const { minYear, minPrice, maxYear, maxPrice, categories }
+    const { minPrice, maxPrice, categories }
         = advConfig;
     const [adv, setAdv] =
         useState<Adv>(advUpdated || initialAdv);
         const [errorMessage, setErrorMessage] = useState('');
+        const [estateFormOpen, setEstateFormOpen] = useState(false);
     
     function handlerName(event: any) {
         const name = event.target.value;
@@ -39,23 +41,26 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
         setAdv(advCopy);
     }
 
-    function handlerAddFields(event: any) {
-        const catFields = event.target.value;
-        const advCopy = { ...adv };
-        advCopy.catFields = catFields;
-        setAdv(advCopy);
+    function estateFormOpenFn ():ReactNode | String {
+    let res:ReactNode | String = "";
+    if (estateFormOpen){
+    res = <AdvEstateForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} adv={adv}/>
     }
+    return res;
+    }   
 
     async function onSubmitFn(event: any) {
         event.preventDefault();
-        const res =  await submitFn(adv);
-        res.status == "success" && event.target.reset();
+        setEstateFormOpen(true);
+        // const res =  await submitFn(adv);
+        // res.status == "success" && event.target.reset();
+        
     }
     function onResetFn(event: any) {
         setAdv(initialAdv);
     }
 
-    return <Box sx={{ marginTop: { sm: "25vh" } }}>
+    return <Box sx={{ marginTop: { sm: "5vh" } }}>
         <form onSubmit={onSubmitFn} onReset={onResetFn}>
             <Grid container spacing={4} justifyContent="center">
                 <Grid item xs={8} sm={5} >
@@ -82,22 +87,14 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
                             max: `${maxPrice }`
                         }} />
                 </Grid>
-                <Grid item xs={8} sm={5} >
-                    <TextField type="text"fullWidth label="Additional fields"
-                        helperText="enter Additional field" onChange={handlerAddFields}
-                        value={adv.catFields} />
-                </Grid>
-               
             </Grid>
 
             <Box sx={{ marginTop: { xs: "10vh", sm: "5vh" }, textAlign: "center" }}>
                 <Button type="submit" >Submit</Button>
                 <Button type="reset">Reset</Button>
             </Box>
-
-
-
         </form>
+        {estateFormOpenFn ()}
        
     </Box>
 }

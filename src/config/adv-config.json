@@ -2,13 +2,15 @@
     
     "minPrice": 1,
     "maxPrice": 50000,
-   
-    "maxYear": 2003,
-    "minYear": 1950,
-    "minRandomQuantity": 1,
-    "maxRandomQuantity": 50,
+    "maxRooms": 50,
+    "minRooms": 1,
+    "minArea": 10,
+    "maxArea": 5000,
     "categories": [
         "real estate", "vehicles", "electronics"
+    ],
+    "estateTypes" : [
+        "flat", "townhouse", "villa"
     ]
     
 }
