@@ -8,25 +8,30 @@ import Estate from "../../model/Estate";
 type Props = {
     submitFn: (adv: Adv) => Promise<InputResult>,
     closeFn: () => void,
-    adv: Adv
-
+    advFull: any
 }
-const initialAdv: Adv = {
-    id: 0, name: '',category: '', price: 0, catFields:''
-};
+
 const initialEstate:Estate = {
     type: "", rooms:0, area: 0
 }
 
-export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, adv}) => {
+
+export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) => {
+
+    if (Object.keys(advFull).includes('type')) {
+        initialEstate.type = advFull.type;
+        initialEstate.rooms = advFull.rooms;
+        initialEstate.area = advFull.area;
+        delete advFull.type;
+        delete advFull.rooms;
+        delete advFull.area;
+    }
+
     const {estateTypes, maxRooms, minRooms,minArea,maxArea}
         = advConfig;
-    // const [adv, setAdv] =
-    //     useState<Adv>(adv || initialAdv);
-        const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [catFields,setCatFields] = useState<Estate>(initialEstate); 
-    
-    
+   
     function handlerType(event: any) {
         const type = event.target.value;
         const catFieldsCopy = { ...catFields};
@@ -46,12 +51,14 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, adv}) => {
         catFieldsCopy.area = area;
         setCatFields(catFieldsCopy);
     }
+    function getEstateString(catFields:Estate) {
+    return JSON.stringify(catFields);
+    }
     
     async function onSubmitFn(event: any) {
         event.preventDefault();
-        const catFieldsString = catFields.toString();
-        adv.catFields = catFieldsString;
-        const res =  await submitFn(adv);
+        advFull.catFields = getEstateString(catFields);
+        const res =  await submitFn(advFull);
         res.status == "success" && event.target.reset();
         closeFn();
     }

@@ -6,11 +6,17 @@
     "minRooms": 1,
     "minArea": 10,
     "maxArea": 5000,
-    "categories": [
-        "real estate", "vehicles", "electronics"
+    "minYear": 1950,
+    "maxYear": 2023,
+    "minMil": 1,
+    "maxMil": 999999,
+    "categories": ["real estate", "vehicles", "electronics"
     ],
     "estateTypes" : [
         "flat", "townhouse", "villa"
+    ],
+    "electronicsTypes" : [
+        "refirigerator", "TV", "computer", "smartphone", "copter", "amplifier"
     ]
     
 }

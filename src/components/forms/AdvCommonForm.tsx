@@ -5,19 +5,21 @@ import advConfig from "../../config/adv-config.json"
 import InputResult from "../../model/InputResult";
 import { StatusType } from "../../model/StatusType";
 import { AdvEstateForm } from "./AdvEstateForm";
+import { AdvVehicleForm } from "./AdvVehicleForm";
+import { AdvElectronicsForm } from "./AdvElectronicsForm";
 type Props = {
     submitFn: (adv: Adv) => Promise<InputResult>,
-    advUpdated?: Adv
+    advFullUpdated?: any
 
 }
 const initialAdv: Adv = {
     id: 0, name: '',category: '', price: 0, catFields:''
 };
-export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
+export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
     const { minPrice, maxPrice, categories }
         = advConfig;
     const [adv, setAdv] =
-        useState<Adv>(advUpdated || initialAdv);
+        useState<any>(advFullUpdated || initialAdv);
         const [errorMessage, setErrorMessage] = useState('');
         const [estateFormOpen, setEstateFormOpen] = useState(false);
     
@@ -44,7 +46,18 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
     function estateFormOpenFn ():ReactNode | String {
     let res:ReactNode | String = "";
     if (estateFormOpen){
-    res = <AdvEstateForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} adv={adv}/>
+        const cat = adv.category;
+        switch (cat) {
+            case 'real estate':
+                res = <AdvEstateForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                break;
+            case 'vehicles':
+                res = <AdvVehicleForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                break;
+            case 'electronics':
+                    res = <AdvElectronicsForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                    break;
+        }
     }
     return res;
     }   
@@ -52,9 +65,6 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advUpdated}) => {
     async function onSubmitFn(event: any) {
         event.preventDefault();
         setEstateFormOpen(true);
-        // const res =  await submitFn(adv);
-        // res.status == "success" && event.target.reset();
-        
     }
     function onResetFn(event: any) {
         setAdv(initialAdv);

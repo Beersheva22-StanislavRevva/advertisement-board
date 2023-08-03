@@ -7,6 +7,7 @@ import { employeesService } from '../../config/service-config';
 import { useDispatchCode } from '../../hooks/hooks';
 import { Confirmation } from '../common/Confirmation';
 import AdvCard from '../cards/AdvCard';
+import Estate from '../../model/Estate';
 
 
    
@@ -84,11 +85,25 @@ const AllAdvs: React.FC = () => {
     const confirmFn = useRef<any>(null);
     const [openEdit, setFlEdit] = useState(false);
     const [openDetails, setFlDetails] = useState(false);
-    const advs: Adv[] = [ // TODO insert useSelectorAdvs();
-                        {id:'100000',name:'KIA Rio', category:'vehicles', price:20000, catFields:"aditional info"  },
-                        {id:'100001',name:'Flat 4-rooms', category:'real estate', price:2000000, catFields:"aditional info"  },
-                        {id:'100002',name:'iPhone 12 Pro ', category:'electronics', price:5000, catFields:"aditional info"  }
+
+    // TODO insert useSelectorAdvs();
+    const object0:Estate = {type:'flat', rooms:4, area:100};
+    const object1:Estate = {type:'townhouse', rooms:8, area:200};
+    const advs: Adv[] = [ 
+                        {id:'100001',name:'Flat 4-rooms', category:'real estate', price:2000000, catFields:JSON.stringify(object0)},
+                        {id:'100002',name:'House in the downtown', category:'real estate', price:4000000, catFields:JSON.stringify(object1) }
                         ]
+
+    let advsFull = getAdvsFull(advs);
+    function getAdvsFull (advs: Adv[]) : any[] {                       
+    let res: any[] = [];
+    for(let i = 0; i < advs.length; i++) {
+        res[i] = {...advs[i],...JSON.parse(advs[i].catFields)};
+        delete res[i].catFields;
+    }
+    return res;
+    }
+        
     function removeAdv(id: any) {
          title.current = "Remove Advertisment?";
          const adv = advs.find(empl => empl.id == id);
@@ -116,7 +131,7 @@ const AllAdvs: React.FC = () => {
         alignContent: 'center'
     }}>
         <Box sx={{ height: '80vh', width: '95vw' }}>
-            <DataGrid columns={columns} rows={advs} />
+            <DataGrid columns={columns} rows={advsFull} />
         </Box>
         <Confirmation confirmFn={confirmFn.current} open={openConfirm}
             title={title.current} content={content.current}></Confirmation>
@@ -127,7 +142,7 @@ const AllAdvs: React.FC = () => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <AdvCard actionFn={cardAction}  adv = {advs.find(e => e.id === advId.current)!} />
+                <AdvCard actionFn={cardAction}  advFull = {advsFull.find(e => e.id === advId.current)!} />
             </Box>
         </Modal>
 
