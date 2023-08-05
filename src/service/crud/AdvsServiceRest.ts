@@ -1,6 +1,6 @@
 import { Observable, Subscriber } from "rxjs";
 import Adv from "../../model/Adv";
-import EmployeesService from "./AdvsService";
+import AdvsService from "./AdvsService";
 import { getRandomInt } from "../../util/random";
 const MIN_ID = 100000;
 const MAX_ID = 1000000;
@@ -75,7 +75,7 @@ async function fetchAllAdvs(url: string):Promise< Adv[]|string> {
     return await response.json()
 }
 
-export default class AdvsServiceRest implements EmployeesService {
+export default class AdvsServiceRest implements AdvsService {
     private observable: Observable<Adv[] | string> | null = null;
     private cache: Cache = new Cache();
     constructor(private url: string) { }
@@ -119,7 +119,14 @@ export default class AdvsServiceRest implements EmployeesService {
         }
         return this.observable;
     }
-       
+    
+    async getAdvsByCat(category: String) {
+        const requestUrl = this.url + "/category/" + category;
+        const response = await fetchRequest(requestUrl,{});
+        
+        return response.json();
+    }
+    
     async addAdv(adv: Adv): Promise<Adv> {
         const id: string = await this.getId();
         const advertisment = convertAdv(adv, id);
