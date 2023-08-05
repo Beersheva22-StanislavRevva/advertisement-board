@@ -41,3 +41,26 @@ export function useSelectorAdvs() {
     }, []);
     return advs;
 }
+
+export function useSelectorCat(category:String) {
+    const dispatch = useDispatchCode();
+    const [advs, setAdvs] = useState<Adv[]>([]);
+    useEffect(() => {
+
+        const subscription: Subscription = advsService.getCat(category)
+            .subscribe({
+                next(advArray: Adv[] | string) {
+                    let errorMessage: string = '';
+                    if (typeof advArray === 'string') {
+                        errorMessage = advArray;
+                    } else {
+                        setAdvs(advArray.map(e => ({ ...e})));
+                    }
+                    dispatch(errorMessage, '');
+
+                }
+            });
+        return () => subscription.unsubscribe();
+    }, []);
+    return advs;
+}

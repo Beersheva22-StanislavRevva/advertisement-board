@@ -20,6 +20,7 @@ import CatSearch from "./components/pages/CatSearch";
 import PriceSearch from "./components/pages/PriceSearch";
 import AllAdvs from "./components/pages/AllAdvs";
 import CatAdvs from "./components/pages/CatAdvs";
+import PriceAdvs from "./components/pages/PriceAdvs";
 const {always} = routesConfig;
 type RouteTypeOrder = RouteType & {order?: number}
 function getRoutes(): RouteType[] {
@@ -49,7 +50,7 @@ const App: React.FC = () => {
     <Route path="/" element={<NavigatorDispatcher routes={routes}/>}>
         <Route index element={<AllAdvs/>}/>
         <Route path="/category" element={<CatAdvs/>}/>
-        <Route path="/price" element={<PriceSearch/>}/>
+        <Route path="/price" element={<PriceAdvs/>}/>
         <Route path="/add" element={<AddAdv/>}/>
         <Route path="/*" element={<NotFound/>}/>
     </Route>

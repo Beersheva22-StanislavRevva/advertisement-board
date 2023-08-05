@@ -83,7 +83,7 @@ let updFlag = false;
         <form onSubmit={onSubmitFn} onReset={onResetFn}>
             <Grid container spacing={4} justifyContent="center">
                 <Grid item xs={8} sm={5} >
-                    <FormControl fullWidth required>
+                    <FormControl fullWidth required disabled = {updFlag}>
                         <InputLabel id="select-type-id">Type</InputLabel>
                         <Select labelId="select-type-id" label="Category"
                             value={catFields.electronicsType || ''} onChange={handlerElectronicsType}>
@@ -94,7 +94,7 @@ let updFlag = false;
                 <Grid item xs={8} sm={5} >
                     <TextField type="text" required fullWidth label="Model"
                         helperText="enter Model" onChange={handlerModel}
-                        value={catFields.model} />
+                        value={catFields.model} disabled = {updFlag}/>
                 </Grid>
             
             <Grid item xs={8} sm={4} md={5}>

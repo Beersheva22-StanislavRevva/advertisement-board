@@ -1,5 +1,5 @@
 import { Delete, Edit, Visibility } from '@mui/icons-material';
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import Adv from '../../model/Adv';
@@ -27,7 +27,7 @@ const style = {
     p: 4,
 };
 
-const CatAdvs: React.FC = () => {
+const PriceAdvs: React.FC = () => {
 
     const columns: GridColDef[] = [
         {
@@ -99,13 +99,13 @@ const CatAdvs: React.FC = () => {
         catFields: '{"":""}'
         }]
         );
-    const[currentCategory, setCurrentCategory] = useState('');
+    const[currentMinPrice, setCurrentMinPrice] = useState(0);
     let cate = 'vehicles';
     
     let advsFull = getAdvsFull(advs);
-    let handlerCategory = (event:any) => {
-        let currentCategoryhandler = event.target.value;
-        setCurrentCategory(currentCategoryhandler);
+    let handlerPrice = (event:any) => {
+        let currentMinPriceHandler = +event.target.value;
+        setCurrentMinPrice(currentMinPriceHandler);
       }
     
     function getAdvsFull (advs: Adv[]) : any[] {                       
@@ -174,7 +174,7 @@ const CatAdvs: React.FC = () => {
     }
     async function onSubmitFn(event: any) {
         event.preventDefault();
-        const adverts = await advsService.getAdvsByCat(currentCategory);
+        const adverts = await advsService.getAdvsByPrice(currentMinPrice);
         setAdvs(adverts);
     }
     return <Box sx={{
@@ -183,15 +183,15 @@ const CatAdvs: React.FC = () => {
     }}>
          <form onSubmit={onSubmitFn}>
          <Grid container spacing={2} justifyContent="center" display="flex" flexDirection="row">
-            <Grid item xs={4} sm={2} >
-                <FormControl required fullWidth  >
-                    <InputLabel id="select-unit-id">Category</InputLabel>
-                    <Select labelId="select-unit-id" label="Status"
-                       onChange={handlerCategory} >
-                         {categories.map(e => <MenuItem value={e} key={e}>{e}</MenuItem>)}
-                    </Select>
-                </FormControl>
-            </Grid>
+         <Grid item xs={8} sm={4} md={5} >
+                    <TextField label="price" fullWidth required
+                        type="number" onChange={handlerPrice}
+                        value={currentMinPrice || ''}
+                        helperText={`enter minprice`}
+                        inputProps={{
+                            min: 1
+                        }} />
+                </Grid>
         </Grid>
         <Box sx={{ marginTop: { xs: "10vh", sm: "5vh" }, textAlign: "center" }}>
                 <Button type="submit" >Submit</Button>
@@ -226,6 +226,6 @@ const CatAdvs: React.FC = () => {
     </Box>
 }
  
- export default CatAdvs;
+ export default PriceAdvs;
 
 

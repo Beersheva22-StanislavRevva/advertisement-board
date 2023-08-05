@@ -18,6 +18,8 @@ const initialAdv: Adv = {
 export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
     const { minPrice, maxPrice, categories }
         = advConfig;
+    let updFlag= false;
+    advFullUpdated && (updFlag = true);
     const [adv, setAdv] =
         useState<any>(advFullUpdated || initialAdv);
         const [errorMessage, setErrorMessage] = useState('');
@@ -74,7 +76,7 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
         <form onSubmit={onSubmitFn} onReset={onResetFn}>
             <Grid container spacing={4} justifyContent="center">
                 <Grid item xs={8} sm={5} >
-                    <FormControl fullWidth required>
+                    <FormControl fullWidth required disabled = {updFlag}>
                         <InputLabel id="select-category-id">Category</InputLabel>
                         <Select labelId="select-category-id" label="Category"
                             value={adv.category} onChange={handlerCategory}>
@@ -100,7 +102,7 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
             </Grid>
 
             <Box sx={{ marginTop: { xs: "10vh", sm: "5vh" }, textAlign: "center" }}>
-                <Button type="submit" >Submit</Button>
+                <Button type="submit" >Next step</Button>
                 <Button type="reset">Reset</Button>
             </Box>
         </form>

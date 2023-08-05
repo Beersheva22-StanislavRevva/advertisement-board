@@ -17,8 +17,9 @@ const initialEstate:Estate = {
 
 
 export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) => {
-
+    let updFlag = false;
     if (Object.keys(advFull).includes('type')) {
+        updFlag = true;
         initialEstate.type = advFull.type;
         initialEstate.rooms = advFull.rooms;
         initialEstate.area = advFull.area;
@@ -70,7 +71,7 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
         <form onSubmit={onSubmitFn} onReset={onResetFn}>
             <Grid container spacing={4} justifyContent="center">
                 <Grid item xs={8} sm={5} >
-                    <FormControl fullWidth required>
+                    <FormControl fullWidth required disabled = {updFlag}>
                         <InputLabel id="select-type-id">Type</InputLabel>
                         <Select labelId="select-type-id" label="Category"
                             value={catFields.type||''} onChange={handlerType}>
@@ -79,7 +80,7 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
                     </FormControl>
                 </Grid>
                 <Grid item xs={8} sm={4} md={5} >
-                    <TextField label="number of rooms" fullWidth required
+                    <TextField label="number of rooms" fullWidth required disabled = {updFlag}
                         type="number" onChange={handlerRooms}
                         value={catFields.rooms || ''}
                         helperText={`enter number of rooms in range [${minRooms}-${maxRooms}]`}
@@ -89,7 +90,7 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
                         }} />
                 </Grid>
                 <Grid item xs={8} sm={4} md={5} >
-                    <TextField label="area" fullWidth required
+                    <TextField label="area" fullWidth required disabled = {updFlag}
                         type="number" onChange={handlerArea}
                         value={catFields.area || ''}
                         helperText={`enter square meters in range [${minArea}-${maxArea}]`}

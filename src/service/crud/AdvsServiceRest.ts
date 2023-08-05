@@ -77,7 +77,9 @@ async function fetchAllAdvs(url: string):Promise< Adv[]|string> {
 
 export default class AdvsServiceRest implements AdvsService {
     private observable: Observable<Adv[] | string> | null = null;
+    private observableCat: Observable<Adv[] | string> | null = null;
     private cache: Cache = new Cache();
+    private cacheCat: Cache = new Cache();
     constructor(private url: string) { }
    
     private getUrlWithId(id: any): string {
@@ -126,6 +128,13 @@ export default class AdvsServiceRest implements AdvsService {
         
         return response.json();
     }
+
+    async getAdvsByPrice(price: number) {
+        if (price > 0) {
+        const requestUrl = `${this.url}/price/${price}`;
+        const response = await fetchRequest(requestUrl,{});
+        return response.json();}
+    }
     
     async addAdv(adv: Adv): Promise<Adv> {
         const id: string = await this.getId();
@@ -145,5 +154,31 @@ export default class AdvsServiceRest implements AdvsService {
         //} while (await this.exists(id));
         return id;
     }
+
+    getCat(category: String): Observable<Adv[] | string> {
+        const requestUrl = this.url + "/category/" + category;
+        let intervalId: any;
+        if (!this.observableCat) {
+            this.observableCat = new Observable<Adv[] | string>(subscriber => {
+                this.cacheCat.reset();
+                this.sibscriberCatNext(requestUrl, subscriber);
+                intervalId = setInterval(() => this.sibscriberCatNext(requestUrl, subscriber), POLLER_INTERVAL);
+                return () => clearInterval(intervalId)
+            })
+        }
+        return this.observableCat;
+    }
+     private sibscriberCatNext(url: string, subscriber: Subscriber<Adv[] | string>): void {
+        
+        fetchAllAdvs(url).then(advs => {
+            if (this.cacheCat.isEmpty() || !this.cacheCat.isEqual(advs as Adv[])) {
+                this.cacheCat.set(advs as Adv[]);
+                subscriber.next(advs);
+            }
+            
+        })
+        .catch(error => subscriber.next(error));
+    }
+    
 
 }
