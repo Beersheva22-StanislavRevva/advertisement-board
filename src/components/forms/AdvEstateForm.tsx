@@ -58,7 +58,7 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
     async function onSubmitFn(event: any) {
         event.preventDefault();
         advFull.catFields = getEstateString(catFields);
-        const res =  await submitFn(advFull);
+        const res =  await submitFn(advFull as Adv);
         res.status == "success" && event.target.reset();
         closeFn();
     }

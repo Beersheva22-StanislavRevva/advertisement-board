@@ -3,11 +3,13 @@ import { Box, Modal, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import Adv from '../../model/Adv';
-import { employeesService } from '../../config/service-config';
-import { useDispatchCode } from '../../hooks/hooks';
+import { useDispatchCode, useSelectorAdvs } from '../../hooks/hooks';
 import { Confirmation } from '../common/Confirmation';
 import AdvCard from '../cards/AdvCard';
 import Estate from '../../model/Estate';
+import { advsService } from '../../config/service-config';
+import { AdvCommonForm } from '../forms/AdvCommonForm';
+import InputResult from '../../model/InputResult';
 
 
    
@@ -58,7 +60,8 @@ const AllAdvs: React.FC = () => {
                         }
                         } />,
                     <GridActionsCellItem label="remove" icon={<Delete />}
-                        onClick={() => removeAdv(params.id)
+                        onClick={() => 
+                            removeAdv(params.id)
                         } />,
                     <GridActionsCellItem label="update" icon={<Edit />}
                         onClick={() => {
@@ -83,18 +86,13 @@ const AllAdvs: React.FC = () => {
     const content = useRef('');
     const advId = useRef('');
     const confirmFn = useRef<any>(null);
+    const adv = useRef<Adv | undefined>();
     const [openEdit, setFlEdit] = useState(false);
     const [openDetails, setFlDetails] = useState(false);
-
-    // TODO insert useSelectorAdvs();
-    const object0:Estate = {type:'flat', rooms:4, area:100};
-    const object1:Estate = {type:'townhouse', rooms:8, area:200};
-    const advs: Adv[] = [ 
-                        {id:'100001',name:'Flat 4-rooms', category:'real estate', price:2000000, catFields:JSON.stringify(object0)},
-                        {id:'100002',name:'House in the downtown', category:'real estate', price:4000000, catFields:JSON.stringify(object1) }
-                        ]
-
+    const advs: Adv[] = useSelectorAdvs();
     let advsFull = getAdvsFull(advs);
+    let advCur:Adv;
+
     function getAdvsFull (advs: Adv[]) : any[] {                       
     let res: any[] = [];
     for(let i = 0; i < advs.length; i++) {
@@ -114,9 +112,42 @@ const AllAdvs: React.FC = () => {
     }
     async function actualRemove(isOk: boolean) {
         let errorMessage: string = '';
-       //TODO
+        if (isOk) {
+           try {
+                await advsService.deleteAdv(advId.current);
+           } catch (error: any) {
+               errorMessage = error;
+           }
+        }
         dispatch(errorMessage, '');
         setOpenConfirm(false);
+    }
+    function updateAdv(adv: any): Promise<InputResult> {
+        setFlEdit(false)
+        const res: InputResult = { status: 'error', message: '' };
+       if (JSON.stringify(advs.find(e => e.id == adv.id)) != JSON.stringify(adv)) {
+            title.current = "Update Advertisment?";
+            advCur = adv;
+            content.current = `You are going update advertisment with id ${adv.id}`;
+            confirmFn.current = actualUpdate;
+            setOpenConfirm(true);
+       }
+        return Promise.resolve(res);
+    }
+    async function actualUpdate(isOk: boolean) {
+        let successMessage: string = '';
+        let errorMessage: string = '';
+        if (isOk) {
+            try {
+                const advertisment: Adv = await advsService.updateAdv(advCur as Adv);
+                successMessage = `advertisment with id: ${advertisment.id} has been updated`
+            } catch (error: any) {
+                errorMessage = error
+            }
+        }
+        dispatch(errorMessage, '');
+        setOpenConfirm(false);
+
     }
     function cardAction(isDelete: boolean){
         if (isDelete) {
@@ -143,6 +174,16 @@ const AllAdvs: React.FC = () => {
         >
             <Box sx={style}>
                 <AdvCard actionFn={cardAction}  advFull = {advsFull.find(e => e.id === advId.current)!} />
+            </Box>
+        </Modal>
+        <Modal
+            open={openEdit}
+            onClose={() => setFlEdit(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <AdvCommonForm submitFn={updateAdv} advFullUpdated={advsFull.find(e => e.id === advId.current)!} />
             </Box>
         </Modal>
 

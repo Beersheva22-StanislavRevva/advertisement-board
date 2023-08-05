@@ -5,7 +5,7 @@ import { codeActions } from "../redux/slices/codeSlice";
 import { useEffect, useState } from "react";
 import Adv from "../model/Adv";
 import { Subscription } from "rxjs";
-import { employeesService } from "../config/service-config";
+import { advsService } from "../config/service-config";
 
 export function useDispatchCode() {
     const dispatch = useDispatch();
@@ -19,12 +19,12 @@ export function useDispatchCode() {
         dispatch(codeActions.set({ code, message: message || successMessage }))
     }
 }
-export function useSelectorEmployees() {
+export function useSelectorAdvs() {
     const dispatch = useDispatchCode();
     const [advs, setAdvs] = useState<Adv[]>([]);
     useEffect(() => {
 
-        const subscription: Subscription = employeesService.getEmployees()
+        const subscription: Subscription = advsService.getAdvs()
             .subscribe({
                 next(advArray: Adv[] | string) {
                     let errorMessage: string = '';

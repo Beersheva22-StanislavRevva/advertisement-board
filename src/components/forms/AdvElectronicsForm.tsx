@@ -70,7 +70,7 @@ let updFlag = false;
         }
         else{ 
             advFull.catFields = getEstateString(catFields);
-            const res =  await submitFn(advFull);
+            const res =  await submitFn(advFull as Adv);
             res.status == "success" && event.target.reset();
             closeFn();
         }

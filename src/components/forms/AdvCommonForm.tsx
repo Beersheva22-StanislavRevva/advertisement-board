@@ -21,7 +21,7 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
     const [adv, setAdv] =
         useState<any>(advFullUpdated || initialAdv);
         const [errorMessage, setErrorMessage] = useState('');
-        const [estateFormOpen, setEstateFormOpen] = useState(false);
+        const [categoryFormOpen, setCategoryFormOpen] = useState(false);
     
     function handlerName(event: any) {
         const name = event.target.value;
@@ -43,19 +43,19 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
         setAdv(advCopy);
     }
 
-    function estateFormOpenFn ():ReactNode | String {
+    function categoryFormOpenFn ():ReactNode | String {
     let res:ReactNode | String = "";
-    if (estateFormOpen){
+    if (categoryFormOpen){
         const cat = adv.category;
         switch (cat) {
             case 'real estate':
-                res = <AdvEstateForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                res = <AdvEstateForm submitFn={submitFn} closeFn={() => setCategoryFormOpen(false)} advFull={adv}/>;
                 break;
             case 'vehicles':
-                res = <AdvVehicleForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                res = <AdvVehicleForm submitFn={submitFn} closeFn={() => setCategoryFormOpen(false)} advFull={adv}/>;
                 break;
             case 'electronics':
-                    res = <AdvElectronicsForm submitFn={submitFn} closeFn={() => setEstateFormOpen(false)} advFull={adv}/>;
+                    res = <AdvElectronicsForm submitFn={submitFn} closeFn={() => setCategoryFormOpen(false)} advFull={adv}/>;
                     break;
         }
     }
@@ -64,7 +64,7 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
 
     async function onSubmitFn(event: any) {
         event.preventDefault();
-        setEstateFormOpen(true);
+        setCategoryFormOpen(true);
     }
     function onResetFn(event: any) {
         setAdv(initialAdv);
@@ -104,7 +104,7 @@ export const AdvCommonForm: React.FC<Props> = ({ submitFn, advFullUpdated}) => {
                 <Button type="reset">Reset</Button>
             </Box>
         </form>
-        {estateFormOpenFn ()}
+        {categoryFormOpenFn ()}
        
     </Box>
 }

@@ -1,7 +1,7 @@
 
-import EmployeesServiceRest from "../service/crud/EmployeesServiceRest";
-import EmployeesService from "../service/crud/EmployeesServiceRest";
-const URL = "http://localhost:8080/sender/";
+import AdvsServiceRest from "../service/crud/AdvsServiceRest";
+import AdvsService from "../service/crud/AdvsService";
+const URL = "http://localhost:8080/advboard";
 
- export const employeesService: EmployeesService = 
-    new EmployeesServiceRest(URL);
+ export const advsService: AdvsService = 
+    new AdvsServiceRest(URL);
