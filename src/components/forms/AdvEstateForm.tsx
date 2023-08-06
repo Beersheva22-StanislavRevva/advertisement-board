@@ -12,7 +12,7 @@ type Props = {
 }
 
 const initialEstate:Estate = {
-    type: "", rooms:0, area: 0
+    type: "", rooms:0, area: 0, purpose:""
 }
 
 
@@ -23,6 +23,7 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
         initialEstate.type = advFull.type;
         initialEstate.rooms = advFull.rooms;
         initialEstate.area = advFull.area;
+        initialEstate.purpose = advFull.rentSale;
         delete advFull.type;
         delete advFull.rooms;
         delete advFull.area;
@@ -52,6 +53,14 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
         catFieldsCopy.area = area;
         setCatFields(catFieldsCopy);
     }
+    function handlerRentSale(event: any) {
+        setErrorMessage('');
+        const rentSale: string = event.target.value;
+        const catFieldsCopy = { ...catFields};
+        catFieldsCopy.purpose = rentSale;
+        setCatFields(catFieldsCopy);
+    }
+
     function getEstateString(catFields:Estate) {
     return JSON.stringify(catFields);
     }
@@ -99,6 +108,22 @@ export const AdvEstateForm: React.FC<Props> = ({ submitFn, closeFn, advFull}) =>
                             max: `${maxArea}`
                         }} />
                 </Grid>                           
+                <Grid item xs={8} sm={4} md={5}>
+                    <FormControl required error={!!errorMessage}>
+                        <FormLabel id="condition-group-label">for rent/for sale</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="condition-group-label"
+                            defaultValue=""
+                            value={catFields.purpose || ''}
+                            name="radio-buttons-group"
+                           row onChange={handlerRentSale}
+                        >
+                            <FormControlLabel value="rent" control={<Radio />} label="Rent" disabled = {updFlag} />
+                            <FormControlLabel value="sale" control={<Radio />} label="Sale" disabled = {updFlag}/>
+                            <FormHelperText>{errorMessage}</FormHelperText>
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
             </Grid>
 
             <Box sx={{ marginTop: { xs: "10vh", sm: "5vh" }, textAlign: "center" }}>

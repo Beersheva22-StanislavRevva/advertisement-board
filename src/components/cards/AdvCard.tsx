@@ -19,21 +19,6 @@ const AdvCard: React.FC<Props> = ({ advFull, actionFn }) => {
         <Card sx={{ minWidth: 275 }}>
           <CardContent> 
           {getCardinfo(advFull)}
-          {/* <Typography variant="h5" ml={7}>
-                   id: {adv.id}
-              </Typography>
-              <Typography variant="h5" ml={7} >
-                   name: {adv.name}
-              </Typography>
-              <Typography variant="h5" ml={7} >
-                   category: {adv.category}
-              </Typography>
-              <Typography variant="h5" ml={7} >
-                   price: {adv.price}
-              </Typography>
-              <Typography variant="h5" ml={7}>
-                   aditional info: {adv.catFields}
-              </Typography> */}
           </CardContent>
             <Button size="small"onClick={() =>actionFn(false) }>Update</Button>
             <Button size="small" onClick={() =>actionFn(true)}>Delete</Button>

@@ -13,14 +13,12 @@ import CodeType from "./model/CodeType";
 import { useDispatch } from "react-redux";
 import { Alert, Snackbar } from "@mui/material";
 import { codeActions } from "./redux/slices/codeSlice";
-//import Generation from "./components/pages/Generation";
-import process from "process";
 import AddAdv from "./components/pages/AddAdv";
-import CatSearch from "./components/pages/CatSearch";
-import PriceSearch from "./components/pages/PriceSearch";
 import AllAdvs from "./components/pages/AllAdvs";
 import CatAdvs from "./components/pages/CatAdvs";
 import PriceAdvs from "./components/pages/PriceAdvs";
+
+
 const {always} = routesConfig;
 type RouteTypeOrder = RouteType & {order?: number}
 function getRoutes(): RouteType[] {

@@ -148,11 +148,17 @@ export default class AdvsServiceRest implements AdvsService {
     }
     private async getId(): Promise<string> {
         let id: string = '';
-        //TODO
-        //do {
-            id = getRandomInt(MIN_ID, MAX_ID).toString();
-        //} while (await this.exists(id));
-        return id;
+        id = getRandomInt(MIN_ID, MAX_ID).toString();
+       return id;
+    }
+    private async exists(id: string): Promise<boolean> {
+        const requestUrl =  `${this.url}/${id}`;
+        let fl: boolean = false;
+        let res = null;
+        const response = await fetchRequest(requestUrl,{});
+        res = response.json();
+        
+        return await res === null ? false : true;
     }
 
     getCat(category: String): Observable<Adv[] | string> {

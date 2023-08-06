@@ -1,7 +1,7 @@
 import { Delete, Edit, Visibility } from '@mui/icons-material';
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, Modal, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Adv from '../../model/Adv';
 import { useDispatchCode, useSelectorAdvs } from '../../hooks/hooks';
 import { Confirmation } from '../common/Confirmation';
@@ -79,6 +79,43 @@ const AllAdvs: React.FC = () => {
         },
                 
        ];
+
+       const columnsPortrait: GridColDef[] = [
+        columns[0],
+        columns[1],
+        {
+            field: 'actions', type: "actions", getActions: (params) => {
+                return [
+                    <GridActionsCellItem label="details" icon={<Visibility />}
+                        onClick={() => {
+                            advId.current = params.id as any;
+                            if (params.row) {
+                                const adv = params.row;
+                                adv && (adv.current = adv);
+                                setFlDetails(true)
+                            }
+    
+                        }
+                        } />,
+                    <GridActionsCellItem label="remove" icon={<Delete />}
+                        onClick={() => 
+                            removeAdv(params.id)
+                        } />,
+                    <GridActionsCellItem label="update" icon={<Edit />}
+                        onClick={() => {
+                            advId.current = params.id as any;
+                            if (params.row) {
+                                const adv = params.row;
+                                adv && (adv.current = adv);
+                                setFlEdit(true)
+                            }
+    
+                        }
+                        } />
+                ] ;
+            } 
+        }
+    ]
     
     const [openConfirm, setOpenConfirm] = useState(false);
     const dispatch = useDispatchCode();
@@ -90,8 +127,21 @@ const AllAdvs: React.FC = () => {
     const [openEdit, setFlEdit] = useState(false);
     const [openDetails, setFlDetails] = useState(false);
     const advs: Adv[] = useSelectorAdvs();
+    const theme = useTheme();
+    const isPortrait = useMediaQuery(theme.breakpoints.down('sm'));
+    const columnsAct = useMemo(() => getColumns(), [advs, isPortrait]);
     let advsFull = getAdvsFull(advs);
     let advCur:Adv;
+
+    
+
+    function getColumns(): GridColDef[] {
+        
+        return isPortrait ? columnsPortrait : getColumnsFromLandscape();
+    }
+    function getColumnsFromLandscape(): GridColDef[]{
+       return columns;
+    }
 
     function getAdvsFull (advs: Adv[]) : any[] {                       
     let res: any[] = [];
@@ -162,7 +212,7 @@ const AllAdvs: React.FC = () => {
         alignContent: 'center'
     }}>
         <Box sx={{ height: '80vh', width: '95vw' }}>
-            <DataGrid columns={columns} rows={advsFull} />
+            <DataGrid columns={columnsAct} rows={advsFull} />
         </Box>
         <Confirmation confirmFn={confirmFn.current} open={openConfirm}
             title={title.current} content={content.current}></Confirmation>
